@@ -4,22 +4,13 @@ import dotenv from "dotenv";
 import cors from "cors";
 import morgan from "morgan";
 import smsRoutes from "./routes/Sms.js";
+import admin from "firebase-admin";
+import { firebase } from "./firebase.js";
+
 dotenv.config();
 
 morgan("tiny");
 // const client = require("twilio")(accountSid, authToken);
-const connect = () => {
-  mongoose
-    .connect(
-      `mongodb+srv://bhavya_gor:${process.env.USERPASSWORD}@cluster0.kjdrvny.mongodb.net/?retryWrites=true&w=majority`
-    )
-    .then(() => {
-      console.log("connected to db");
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-};
 
 const app = express();
 
@@ -38,6 +29,5 @@ app.get("/", (req, res) => {
 });
 app.use("/api/sms", smsRoutes);
 app.listen(8000, () => {
-  connect();
   console.log("Server on");
 });
