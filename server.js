@@ -3,6 +3,8 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
 import morgan from "morgan";
+import sendMail from "./controllers/sendMail.js";
+
 
 dotenv.config();
 
@@ -36,6 +38,8 @@ app.use((req, res, next) => {
 app.get("/", (req, res) => {
   res.send("hello");
 });
+
+app.post("/email", sendMail);
 
 app.listen(8000, () => {
   connect();
