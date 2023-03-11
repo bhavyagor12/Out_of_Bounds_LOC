@@ -3,11 +3,11 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
 import morgan from "morgan";
-
+import smsRoutes from "./routes/Sms.js";
 dotenv.config();
 
 morgan("tiny");
-
+// const client = require("twilio")(accountSid, authToken);
 const connect = () => {
   mongoose
     .connect(
@@ -36,7 +36,7 @@ app.use((req, res, next) => {
 app.get("/", (req, res) => {
   res.send("hello");
 });
-
+app.use("/api/sms", smsRoutes);
 app.listen(8000, () => {
   connect();
   console.log("Server on");
