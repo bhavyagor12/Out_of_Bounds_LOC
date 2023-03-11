@@ -3,25 +3,16 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
 import morgan from "morgan";
+import smsRoutes from "./routes/Sms.js";
+import admin from "firebase-admin";
+import { firebase } from "./firebase.js";
 import sendMail from "./controllers/sendMail.js";
 
 
 dotenv.config();
 
 morgan("tiny");
-
-const connect = () => {
-  mongoose
-    .connect(
-      `mongodb+srv://bhavya_gor:${process.env.USERPASSWORD}@cluster0.kjdrvny.mongodb.net/?retryWrites=true&w=majority`
-    )
-    .then(() => {
-      console.log("connected to db");
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-};
+// const client = require("twilio")(accountSid, authToken);
 
 const app = express();
 
@@ -38,10 +29,9 @@ app.use((req, res, next) => {
 app.get("/", (req, res) => {
   res.send("hello");
 });
-
+app.use("/api/sms", smsRoutes);
 app.post("/email", sendMail);
 
 app.listen(8000, () => {
-  connect();
   console.log("Server on");
 });
