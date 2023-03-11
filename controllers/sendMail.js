@@ -8,14 +8,14 @@ const sendMail = async (req, res) => {
     const transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-            user: 'shahayush934@gmail.com',
-            pass: 'hwstlrppcguqzbrq'
+            user: process.env.MAILUSER,
+            pass: process.env.MAILPASSWORD
         }
     });
     let info = await transporter.sendMail({
         from: '"Ayush Shah" <shahayush934@gmail.com>', // sender address
-        to: "shahayush934@gmail.com", // list of receivers
-        subject: "Hello ✔", // Subject line
+        to: receiver, // list of receivers
+        subject: subject, // Subject line
         text: msg, // plain text body
         html: "<b>"+msg+"</b>", // html body
     });
