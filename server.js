@@ -1,13 +1,20 @@
 import express from "express";
-import mongoose from "mongoose";
+import mongoose, { set } from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
 import morgan from "morgan";
 import smsRoutes from "./routes/Sms.js";
-import admin from "firebase-admin";
-import { firebase } from "./firebase.js";
-import sendMail from "./controllers/sendMail.js";
+import couponRoutes from "./routes/Coupon.js";
 
+import sendMail from "./controllers/sendMail.js";
+import {
+  getDatabase,
+  ref,
+  onValue,
+  child,
+  push,
+  update,
+} from "firebase/database";
 
 dotenv.config();
 
@@ -29,9 +36,36 @@ app.use((req, res, next) => {
 app.get("/", (req, res) => {
   res.send("hello");
 });
+
+app.get("/firebaseData", (req, res) => {
+  const db = getDatabase();
+  const starCountRef = ref(db, "user/");
+  onValue(starCountRef, (snapshot) => {
+    const data = snapshot.val();
+    res.send(data);
+    return;
+  });
+  res.send("error");
+});
+
+app.get("/addData", (req, res) => {
+  const db = getDatabase();
+  const postData = {
+    author: "bhavya",
+  };
+
+  const newPostKey = push(child(ref(db), "user/data/")).key;
+  const updates = {};
+  updates["user/" + newPostKey] = postData;
+
+  res.send(update(ref(db), updates));
+});
+
 app.use("/api/sms", smsRoutes);
 app.post("/email", sendMail);
 
-app.listen(8000, () => {
+app.use("/api/coupon", couponRoutes);
+
+app.listen(9000, () => {
   console.log("Server on");
 });
