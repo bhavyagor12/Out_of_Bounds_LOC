@@ -4,12 +4,13 @@ import {
   onValue,
   child,
   push,
-  update,
+    update,
 } from "firebase/database";
 import { Engine } from "json-rules-engine";
+import { firebaseApp } from "../firebaseConfig.js";
 
 const getCouponData = async (couponID) => {
-  const db = getDatabase();
+  const db = getDatabase(firebaseApp);
   const starCountRef = ref(db, `user/${couponID}`);
   return new Promise((resolve, reject) => {
     onValue(
@@ -88,8 +89,8 @@ export const validateCoupon = async (req, res, next) => {
 };
 
 const getCouponArray = async (userID) => {
-  const db = getDatabase();
-  const starCountRef = ref(db, `user/${userID}/Coupons`);
+  const db = getDatabase(firebaseApp);
+  const starCountRef = ref(db, `org/jinishshah08/users/${userID}/Coupons`);
   return new Promise((resolve, reject) => {
     onValue(
       starCountRef,
