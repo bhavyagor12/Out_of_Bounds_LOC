@@ -86,3 +86,44 @@ export const validateCoupon = async (req, res, next) => {
 
     .catch((err) => console.log(err));
 };
+
+const getCouponArray = async (userID) => {
+  const db = getDatabase();
+  const starCountRef = ref(db, `user/${userID}/Coupons`);
+  return new Promise((resolve, reject) => {
+    onValue(
+      starCountRef,
+      (snapshot) => {
+        const couponData = snapshot.val();
+        resolve(couponData);
+      },
+      (error) => {
+        reject(error);
+      }
+    );
+  });
+};
+
+export const getCouponsForUser = async (req, res, next) => {
+  const userID = req.body.userId || "";
+  try {
+    const getCouponArr = (await getCouponArray(userID)) || [];
+    let couponIds = [];
+    getCouponArr.map((a) => {
+      couponIds.push(a);
+    });
+    res.send(couponIds);
+  } catch (e) {
+    res.send("err");
+  }
+};
+
+export const getCouponUI = async (req, res, next) => {
+  const couponId = req.body.couponId || "";
+  try {
+    const couponData = await getCouponData(couponId);
+    res.send(couponData);
+  } catch (e) {
+    res.send(e);
+  }
+};
